@@ -9,9 +9,9 @@ contract AudioChat {
     string cid_metadata,
     stateOptions current_state
     );
-    event handleaudio_chatstateChanged(bytes32 audio_event_id, stateOptions newState);
-    event handleUpdateMetadataCID(bytes32 audio_event_id, string newCid);
-    enum stateOptions{ PLANNED, LIVE, CANCELED, PENDING}
+    event handleAudioChatStateChanged(bytes32 audio_event_id, stateOptions new_state);
+    event handleUpdateMetadataCID(bytes32 audio_event_id, string new_cid);
+    enum stateOptions{ PLANNED, LIVE, CANCELED, READY, FINSIHED}
     struct CreateAudioChat {
         bytes32 audio_event_id;
         uint256 created_at;
@@ -59,7 +59,7 @@ function createNewAudioChat(
         current_state = stateOptions.PLANNED;
     }
     else {
-        current_state = stateOptions.PENDING;
+        current_state = stateOptions.READY;
     }
     uint256 new_list_state_index;
     if (state_to_audio_chat[current_state].length == 0){
@@ -110,7 +110,7 @@ function stateChanged(stateOptions new_changed_state, bytes32 audio_chat_id) pub
     id_to_audio_chat[audio_chat_id].state = new_changed_state;
     address_to_audio_chat[id_to_audio_chat[audio_chat_id].creator][id_to_audio_chat[audio_chat_id].list_address_index].state = new_changed_state;
     address_to_audio_chat[id_to_audio_chat[audio_chat_id].creator][id_to_audio_chat[audio_chat_id].list_address_index].list_state_index = state_new_list_index;
-    emit handleaudio_chatstateChanged(audio_chat_id, new_changed_state);
+    emit handleAudioChatStateChanged(audio_chat_id, new_changed_state);
 }
 
 function getAudioChatById(bytes32 id) public view returns ( bytes32 audio_event_id,
@@ -133,10 +133,10 @@ function getAudioChatById(bytes32 id) public view returns ( bytes32 audio_event_
     }
 
 
-function getaudio_chatsByAdress(address creator) public view returns(CreateAudioChat[] memory){
+function getAudioChatsByAdress(address creator) public view returns(CreateAudioChat[] memory){
         return address_to_audio_chat[creator];
 }
-function getaudio_chatsByState(stateOptions[] memory options) public view returns(CreateAudioChat[] memory){
+function getAudioChatsByState(stateOptions[] memory options) public view returns(CreateAudioChat[] memory){
     uint256 total_size;
     for (uint256 i; options.length > i; i++){
         total_size += state_to_audio_chat[options[i]].length;
@@ -144,9 +144,9 @@ function getaudio_chatsByState(stateOptions[] memory options) public view return
     CreateAudioChat[] memory audio_chats = new CreateAudioChat[](total_size);
     uint256 count = 0;
     for (uint256 i; options.length > i; i++){
-        CreateAudioChat[] storage currentAudioChatArr = state_to_audio_chat[options[i]];
-        for (uint256 ch; currentAudioChatArr.length > ch; ch++){
-            audio_chats[count] = currentAudioChatArr[ch];
+        CreateAudioChat[] storage current_audio_chat_arr = state_to_audio_chat[options[i]];
+        for (uint256 ch; current_audio_chat_arr.length > ch; ch++){
+            audio_chats[count] = current_audio_chat_arr[ch];
             count++;
         }
     }
