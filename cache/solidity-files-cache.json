@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/timotej/Desktop/smartContractRally/contracts/AudioChat.sol": {
-      "lastModificationDate": 1667149723217,
-      "contentHash": "41edef9aea19c81b960f287b973399b8",
+      "lastModificationDate": 1667386145653,
+      "contentHash": "24c01a9a798022e9034fc558d6338afa",
       "sourceName": "contracts/AudioChat.sol",
       "solcConfig": {
         "version": "0.8.9",

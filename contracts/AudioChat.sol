@@ -2,164 +2,167 @@ pragma solidity ^0.8.9;
 pragma abicoder v2;
 
 contract AudioChat {
-    event handleNewAudioChat(uint256 eventTimestamp,
-    uint256 createdAt,
+    event handleNewAudioChat(
+    bytes32 audio_event_id,
+    uint256 start_at,
+    uint256 created_at,
     string cid_metadata,
-    stateOptions currentState
+    stateOptions current_state
     );
-    event handleAudioChatStateChanged(bytes32 audioEventId, stateOptions newState);
-    event handleUpdateMetadataCID(bytes32 audioEventId, string newCid);
+    event handleaudio_chatstateChanged(bytes32 audio_event_id, stateOptions newState);
+    event handleUpdateMetadataCID(bytes32 audio_event_id, string newCid);
     enum stateOptions{ PLANNED, LIVE, CANCELED, PENDING}
     struct CreateAudioChat {
-        bytes32 audioEventId;
-        uint256 createdAt;
+        bytes32 audio_event_id;
+        uint256 created_at;
         string cid_metadata;
         stateOptions state;
         address creator;
-        uint256 eventTimestamp;
-        uint256 listAddressIndex;
-        uint256 listStateIndex;
+        uint256 start_at;
+        uint256 list_address_index;
+        uint256 list_state_index;
     }
 
 
-bytes32[] private _ownedIds;
-mapping(bytes32 => CreateAudioChat) public idToAudioChat; 
-mapping(address => CreateAudioChat[]) public addressToAudioChat;
-mapping(stateOptions => CreateAudioChat[]) public stateToAudioChat;
-//state will be passed as a string an event is gonna be emitted (handleAudioChatStateChanged)
+bytes32[] private _owned_ids;
+mapping(bytes32 => CreateAudioChat) public id_to_audio_chat; 
+mapping(address => CreateAudioChat[]) public address_to_audio_chat;
+mapping(stateOptions => CreateAudioChat[]) public state_to_audio_chat;
+//state will be passed as a string an event is gonna be emitted (handleaudio_chatstateChanged)
 
 function createNewAudioChat(
-    uint256 eventTimestamp,
-    uint256 createdAt,
+    uint256 start_at,
+    uint256 created_at,
     string calldata cid_metadata,
     address creator
 ) external {
     
-    bytes32 audioEventId = keccak256(
+    bytes32 audio_event_id = keccak256(
         abi.encodePacked(
             msg.sender,
             address(this),
-            eventTimestamp
+            start_at
         )
     );
-    require(idToAudioChat[audioEventId].eventTimestamp == 0, "ALREADY REGISTERED");
-    require(eventTimestamp >= createdAt, 'createdAt cannot be greater than eventTimestamp');
-    stateOptions currentState;
-    uint256 newListAddressIndex;
-    if (addressToAudioChat[creator].length == 0){
-        newListAddressIndex = 0;
+    require(id_to_audio_chat[audio_event_id].start_at == 0, "ALREADY REGISTERED");
+    require(start_at >= created_at, 'created_at cannot be greater than start_at');
+    stateOptions current_state;
+    uint256 new_list_address_index;
+    if (address_to_audio_chat[creator].length == 0){
+        new_list_address_index = 0;
     }
     else {
-        newListAddressIndex = addressToAudioChat[creator].length - 1;
+        new_list_address_index = address_to_audio_chat[creator].length - 1;
     }
 
-    if (eventTimestamp > createdAt){
-        currentState = stateOptions.PLANNED;
+    if (start_at > created_at){
+        current_state = stateOptions.PLANNED;
     }
     else {
-        currentState = stateOptions.PENDING;
+        current_state = stateOptions.PENDING;
     }
-    uint256 newListStateIndex;
-    if (stateToAudioChat[currentState].length == 0){
-        newListStateIndex = 0;
+    uint256 new_list_state_index;
+    if (state_to_audio_chat[current_state].length == 0){
+        new_list_state_index = 0;
     }
     else {
-        newListStateIndex = stateToAudioChat[currentState].length + 1;
+        new_list_state_index = state_to_audio_chat[current_state].length + 1;
     }
 
-    require(idToAudioChat[audioEventId].eventTimestamp == 0, "ALREADY REGISTERED");
+    require(id_to_audio_chat[audio_event_id].start_at == 0, "ALREADY REGISTERED");
     
-    idToAudioChat[audioEventId] = CreateAudioChat(
-        audioEventId,
-        createdAt,
+    id_to_audio_chat[audio_event_id] = CreateAudioChat(
+        audio_event_id,
+        created_at,
         cid_metadata,
-        currentState,
+        current_state,
         creator,
-        eventTimestamp,
-        newListAddressIndex,
-        newListStateIndex
+        start_at,
+        new_list_address_index,
+        new_list_state_index
     );
-    addressToAudioChat[creator].push(idToAudioChat[audioEventId]);
-    stateToAudioChat[currentState].push(idToAudioChat[audioEventId]);
-    _ownedIds.push(audioEventId);
+    address_to_audio_chat[creator].push(id_to_audio_chat[audio_event_id]);
+    state_to_audio_chat[current_state].push(id_to_audio_chat[audio_event_id]);
+    _owned_ids.push(audio_event_id);
 
     emit handleNewAudioChat(
-        eventTimestamp,
-        createdAt,
+        audio_event_id,
+        start_at,
+        created_at,
         cid_metadata,
-        currentState
+        current_state
     );
 }
 
-function stateChanged(stateOptions newChangedState, bytes32 audioChatId) public {
-    uint256 stateListIndex = idToAudioChat[audioChatId].listStateIndex;
-    stateOptions previousState = idToAudioChat[audioChatId].state;
+function stateChanged(stateOptions new_changed_state, bytes32 audio_chat_id) public {
+    uint256 state_list_index = id_to_audio_chat[audio_chat_id].list_state_index;
+    stateOptions previous_state = id_to_audio_chat[audio_chat_id].state;
 
-    delete stateToAudioChat[previousState][stateListIndex];
+    delete state_to_audio_chat[previous_state][state_list_index];
 
-    stateToAudioChat[previousState][stateListIndex] = stateToAudioChat[previousState][stateToAudioChat[previousState].length - 1];
-    stateToAudioChat[previousState].pop();
-    stateToAudioChat[newChangedState].push(idToAudioChat[audioChatId]);
-    stateToAudioChat[newChangedState][stateToAudioChat[newChangedState].length - 1].listStateIndex = stateToAudioChat[newChangedState].length - 1;  
+    state_to_audio_chat[previous_state][state_list_index] = state_to_audio_chat[previous_state][state_to_audio_chat[previous_state].length - 1];
+    state_to_audio_chat[previous_state].pop();
+    state_to_audio_chat[new_changed_state].push(id_to_audio_chat[audio_chat_id]);
+    state_to_audio_chat[new_changed_state][state_to_audio_chat[new_changed_state].length - 1].list_state_index = state_to_audio_chat[new_changed_state].length - 1;  
 
-    uint256 stateNewListIndex = stateToAudioChat[newChangedState].length - 1;
-    idToAudioChat[audioChatId].listStateIndex = stateNewListIndex;
-    idToAudioChat[audioChatId].state = newChangedState;
-    addressToAudioChat[idToAudioChat[audioChatId].creator][idToAudioChat[audioChatId].listAddressIndex].state = newChangedState;
-    addressToAudioChat[idToAudioChat[audioChatId].creator][idToAudioChat[audioChatId].listAddressIndex].listStateIndex = stateNewListIndex;
-    emit handleAudioChatStateChanged(audioChatId, newChangedState);
+    uint256 state_new_list_index = state_to_audio_chat[new_changed_state].length - 1;
+    id_to_audio_chat[audio_chat_id].list_state_index = state_new_list_index;
+    id_to_audio_chat[audio_chat_id].state = new_changed_state;
+    address_to_audio_chat[id_to_audio_chat[audio_chat_id].creator][id_to_audio_chat[audio_chat_id].list_address_index].state = new_changed_state;
+    address_to_audio_chat[id_to_audio_chat[audio_chat_id].creator][id_to_audio_chat[audio_chat_id].list_address_index].list_state_index = state_new_list_index;
+    emit handleaudio_chatstateChanged(audio_chat_id, new_changed_state);
 }
 
-function getAudioChatById(bytes32 id) public view returns ( bytes32 audioEventId,
-        uint256 createdAt,
-        uint256 eventTimestamp,
+function getAudioChatById(bytes32 id) public view returns ( bytes32 audio_event_id,
+        uint256 created_at,
+        uint256 start_at,
         string memory cid_metadata,
         stateOptions state,
         address creator
         ) {
-    return (idToAudioChat[id].audioEventId, 
-    idToAudioChat[id].createdAt,
-    idToAudioChat[id].eventTimestamp,
-    idToAudioChat[id].cid_metadata,
-    idToAudioChat[id].state,
-    idToAudioChat[id].creator
+    return (id_to_audio_chat[id].audio_event_id, 
+    id_to_audio_chat[id].created_at,
+    id_to_audio_chat[id].start_at,
+    id_to_audio_chat[id].cid_metadata,
+    id_to_audio_chat[id].state,
+    id_to_audio_chat[id].creator
     );
 }
     function getAllOwnedIds() public view virtual returns (bytes32[] memory) {
-        return _ownedIds;
+        return _owned_ids;
     }
 
 
-function getAudioChatsByAdress(address creator) public view returns(CreateAudioChat[] memory){
-        return addressToAudioChat[creator];
+function getaudio_chatsByAdress(address creator) public view returns(CreateAudioChat[] memory){
+        return address_to_audio_chat[creator];
 }
-function getAudioChatsByState(stateOptions[] memory options) public view returns(CreateAudioChat[] memory){
-    uint256 totalSize;
+function getaudio_chatsByState(stateOptions[] memory options) public view returns(CreateAudioChat[] memory){
+    uint256 total_size;
     for (uint256 i; options.length > i; i++){
-        totalSize += stateToAudioChat[options[i]].length;
+        total_size += state_to_audio_chat[options[i]].length;
     }
-    CreateAudioChat[] memory audioChats = new CreateAudioChat[](totalSize);
+    CreateAudioChat[] memory audio_chats = new CreateAudioChat[](total_size);
     uint256 count = 0;
     for (uint256 i; options.length > i; i++){
-        CreateAudioChat[] storage currentAudioChatArr = stateToAudioChat[options[i]];
+        CreateAudioChat[] storage currentAudioChatArr = state_to_audio_chat[options[i]];
         for (uint256 ch; currentAudioChatArr.length > ch; ch++){
-            audioChats[count] = currentAudioChatArr[ch];
+            audio_chats[count] = currentAudioChatArr[ch];
             count++;
         }
     }
 
     
-    return audioChats;
+    return audio_chats;
 }
 }
 /*function getAudioChatByAdress(address creator) public view returns(CreateAudioChat[] memory){
-        uint256 audioChatLength = addressToAudioChat[creator].length;
-        CreateAudioChat[] memory audioChatsToBeSent = new CreateAudioChat[](audioChatLength);
+        uint256 audioChatLength = address_to_audio_chat[creator].length;
+        CreateAudioChat[] memory audio_chatsToBeSent = new CreateAudioChat[](audioChatLength);
         for (uint i = 0; i < audioChatLength; i++){
-            CreateAudioChat storage audioChatToBeSent =  addressToAudioChat[creator][i];
-            audioChatsToBeSent[0] = audioChatToBeSent;
+            CreateAudioChat storage audioChatToBeSent =  address_to_audio_chat[creator][i];
+            audio_chatsToBeSent[0] = audioChatToBeSent;
         }
-        return  addressToAudioChat[creator];
+        return  address_to_audio_chat[creator];
     }
 */
 
