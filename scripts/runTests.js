@@ -1,5 +1,5 @@
 const hre = require("hardhat");
-const { expect } = require('chai');
+const { expect } = require('chai').expect;
 const assert = require("chai").assert;
 
 /*contract('AudioChat', (chats) => {

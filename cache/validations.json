@@ -1,0 +1,565 @@
+{
+  "version": "3.4",
+  "log": [
+    {
+      "@openzeppelin/contracts/access/Ownable.sol:Ownable": {
+        "src": "@openzeppelin/contracts/access/Ownable.sol:20",
+        "inherit": [
+          "@openzeppelin/contracts/utils/Context.sol:Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "owner()",
+          "renounceOwnership()",
+          "transferOwnership(address)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Ownable",
+            "src": "@openzeppelin/contracts/access/Ownable.sol:28"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "_owner",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "Ownable",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:21"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true
+        },
+        "solcVersion": "0.8.9"
+      },
+      "@openzeppelin/contracts/utils/Context.sol:Context": {
+        "src": "@openzeppelin/contracts/utils/Context.sol:16",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false
+        },
+        "solcVersion": "0.8.9"
+      },
+      "contracts/AudioChat.sol:AudioChat": {
+        "src": "contracts/AudioChat.sol:5",
+        "version": {
+          "withMetadata": "b0af8cc3c924e3c3e238d459bdae472435f3dd110d09856fb3873a3412c5d325",
+          "withoutMetadata": "43c7f8097f7c97a0f87ce4c0bfd437ddeeb90c108ecfd204de3fd3c4f6806f07",
+          "linkedWithoutMetadata": "43c7f8097f7c97a0f87ce4c0bfd437ddeeb90c108ecfd204de3fd3c4f6806f07"
+        },
+        "inherit": [
+          "@openzeppelin/contracts/access/Ownable.sol:Ownable",
+          "@openzeppelin/contracts/utils/Context.sol:Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "createNewAudioChat(uint256,uint256,string,address,bool)",
+          "changeState(uint8,bytes32)",
+          "getAudioChatById(bytes32)",
+          "getAllOwnedIds()",
+          "getAllChats()",
+          "getAudioChatsByAdress(address)",
+          "getAudioChatsByState(enum AudioChat.stateOptions[])",
+          "deleteTheAudioChat(bytes32)",
+          "updateTheAudioChat(bytes32,string,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [
+            {
+              "label": "_owner",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "Ownable",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:21"
+            },
+            {
+              "label": "_owned_ids",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_array(t_bytes32)dyn_storage",
+              "contract": "AudioChat",
+              "src": "contracts/AudioChat.sol:32"
+            },
+            {
+              "label": "state_live",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_array(t_bytes32)dyn_storage",
+              "contract": "AudioChat",
+              "src": "contracts/AudioChat.sol:33"
+            },
+            {
+              "label": "state_canceled",
+              "offset": 0,
+              "slot": "3",
+              "type": "t_array(t_bytes32)dyn_storage",
+              "contract": "AudioChat",
+              "src": "contracts/AudioChat.sol:34"
+            },
+            {
+              "label": "state_planned",
+              "offset": 0,
+              "slot": "4",
+              "type": "t_array(t_bytes32)dyn_storage",
+              "contract": "AudioChat",
+              "src": "contracts/AudioChat.sol:35"
+            },
+            {
+              "label": "state_ready",
+              "offset": 0,
+              "slot": "5",
+              "type": "t_array(t_bytes32)dyn_storage",
+              "contract": "AudioChat",
+              "src": "contracts/AudioChat.sol:36"
+            },
+            {
+              "label": "state_finished",
+              "offset": 0,
+              "slot": "6",
+              "type": "t_array(t_bytes32)dyn_storage",
+              "contract": "AudioChat",
+              "src": "contracts/AudioChat.sol:37"
+            },
+            {
+              "label": "id_to_audio_chat",
+              "offset": 0,
+              "slot": "7",
+              "type": "t_mapping(t_bytes32,t_struct(CreateAudioChat)196_storage)",
+              "contract": "AudioChat",
+              "src": "contracts/AudioChat.sol:38"
+            },
+            {
+              "label": "address_to_audio_chat",
+              "offset": 0,
+              "slot": "8",
+              "type": "t_mapping(t_address,t_array(t_bytes32)dyn_storage)",
+              "contract": "AudioChat",
+              "src": "contracts/AudioChat.sol:39"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_array(t_bytes32)dyn_storage": {
+              "label": "bytes32[]",
+              "numberOfBytes": "32"
+            },
+            "t_bool": {
+              "label": "bool",
+              "numberOfBytes": "1"
+            },
+            "t_bytes32": {
+              "label": "bytes32",
+              "numberOfBytes": "32"
+            },
+            "t_enum(stateOptions)172": {
+              "label": "enum AudioChat.stateOptions",
+              "members": [
+                "PLANNED",
+                "LIVE",
+                "CANCELED",
+                "READY",
+                "FINISHED"
+              ],
+              "numberOfBytes": "1"
+            },
+            "t_mapping(t_address,t_array(t_bytes32)dyn_storage)": {
+              "label": "mapping(address => bytes32[])",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_bytes32,t_struct(CreateAudioChat)196_storage)": {
+              "label": "mapping(bytes32 => struct AudioChat.CreateAudioChat)",
+              "numberOfBytes": "32"
+            },
+            "t_string_storage": {
+              "label": "string",
+              "numberOfBytes": "32"
+            },
+            "t_struct(CreateAudioChat)196_storage": {
+              "label": "struct AudioChat.CreateAudioChat",
+              "members": [
+                {
+                  "label": "audio_event_id",
+                  "type": "t_bytes32",
+                  "offset": 0,
+                  "slot": "0"
+                },
+                {
+                  "label": "created_at",
+                  "type": "t_uint256",
+                  "offset": 0,
+                  "slot": "1"
+                },
+                {
+                  "label": "cid_metadata",
+                  "type": "t_string_storage",
+                  "offset": 0,
+                  "slot": "2"
+                },
+                {
+                  "label": "state",
+                  "type": "t_enum(stateOptions)172",
+                  "offset": 0,
+                  "slot": "3"
+                },
+                {
+                  "label": "is_indexed",
+                  "type": "t_bool",
+                  "offset": 1,
+                  "slot": "3"
+                },
+                {
+                  "label": "creator",
+                  "type": "t_address",
+                  "offset": 2,
+                  "slot": "3"
+                },
+                {
+                  "label": "start_at",
+                  "type": "t_uint256",
+                  "offset": 0,
+                  "slot": "4"
+                },
+                {
+                  "label": "exists",
+                  "type": "t_bool",
+                  "offset": 0,
+                  "slot": "5"
+                },
+                {
+                  "label": "id_index",
+                  "type": "t_uint256",
+                  "offset": 0,
+                  "slot": "6"
+                },
+                {
+                  "label": "state_index",
+                  "type": "t_uint256",
+                  "offset": 0,
+                  "slot": "7"
+                },
+                {
+                  "label": "address_index",
+                  "type": "t_uint256",
+                  "offset": 0,
+                  "slot": "8"
+                }
+              ],
+              "numberOfBytes": "288"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true
+        },
+        "solcVersion": "0.8.9"
+      }
+    },
+    {
+      "@openzeppelin/contracts/access/Ownable.sol:Ownable": {
+        "src": "@openzeppelin/contracts/access/Ownable.sol:20",
+        "inherit": [
+          "@openzeppelin/contracts/utils/Context.sol:Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "owner()",
+          "renounceOwnership()",
+          "transferOwnership(address)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "Ownable",
+            "src": "@openzeppelin/contracts/access/Ownable.sol:28"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "_owner",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "Ownable",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:21"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true
+        },
+        "solcVersion": "0.8.9"
+      },
+      "@openzeppelin/contracts/utils/Context.sol:Context": {
+        "src": "@openzeppelin/contracts/utils/Context.sol:16",
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false
+        },
+        "solcVersion": "0.8.9"
+      },
+      "contracts/AudioChat.sol:AudioChat": {
+        "src": "contracts/AudioChat.sol:5",
+        "version": {
+          "withMetadata": "5fde461026196218b31b0d15bfa993bd602c15b3b1834309066435e44bd07320",
+          "withoutMetadata": "c1c9d507100d48db5711397aafd09fae4ffb4b3a963fb1a526c9d5755383f765",
+          "linkedWithoutMetadata": "c1c9d507100d48db5711397aafd09fae4ffb4b3a963fb1a526c9d5755383f765"
+        },
+        "inherit": [
+          "@openzeppelin/contracts/access/Ownable.sol:Ownable",
+          "@openzeppelin/contracts/utils/Context.sol:Context"
+        ],
+        "libraries": [],
+        "methods": [
+          "createNewAudioChat(uint256,uint256,string,address,bool)",
+          "changeState(uint8,bytes32)",
+          "getAudioChatById(bytes32)",
+          "getAllOwnedIds()",
+          "getAllChats()",
+          "getAudioChatsByAdress(address)",
+          "getAudioChatsByState(enum AudioChat.stateOptions[])",
+          "deleteTheAudioChat(bytes32)",
+          "updateTheAudioChat(bytes32,string,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [
+            {
+              "label": "_owner",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "Ownable",
+              "src": "@openzeppelin/contracts/access/Ownable.sol:21"
+            },
+            {
+              "label": "_owned_ids",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_array(t_bytes32)dyn_storage",
+              "contract": "AudioChat",
+              "src": "contracts/AudioChat.sol:32"
+            },
+            {
+              "label": "state_live",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_array(t_bytes32)dyn_storage",
+              "contract": "AudioChat",
+              "src": "contracts/AudioChat.sol:33"
+            },
+            {
+              "label": "state_canceled",
+              "offset": 0,
+              "slot": "3",
+              "type": "t_array(t_bytes32)dyn_storage",
+              "contract": "AudioChat",
+              "src": "contracts/AudioChat.sol:34"
+            },
+            {
+              "label": "state_planned",
+              "offset": 0,
+              "slot": "4",
+              "type": "t_array(t_bytes32)dyn_storage",
+              "contract": "AudioChat",
+              "src": "contracts/AudioChat.sol:35"
+            },
+            {
+              "label": "state_ready",
+              "offset": 0,
+              "slot": "5",
+              "type": "t_array(t_bytes32)dyn_storage",
+              "contract": "AudioChat",
+              "src": "contracts/AudioChat.sol:36"
+            },
+            {
+              "label": "state_finished",
+              "offset": 0,
+              "slot": "6",
+              "type": "t_array(t_bytes32)dyn_storage",
+              "contract": "AudioChat",
+              "src": "contracts/AudioChat.sol:37"
+            },
+            {
+              "label": "id_to_audio_chat",
+              "offset": 0,
+              "slot": "7",
+              "type": "t_mapping(t_bytes32,t_struct(CreateAudioChat)196_storage)",
+              "contract": "AudioChat",
+              "src": "contracts/AudioChat.sol:38"
+            },
+            {
+              "label": "address_to_audio_chat",
+              "offset": 0,
+              "slot": "8",
+              "type": "t_mapping(t_address,t_array(t_bytes32)dyn_storage)",
+              "contract": "AudioChat",
+              "src": "contracts/AudioChat.sol:39"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_array(t_bytes32)dyn_storage": {
+              "label": "bytes32[]",
+              "numberOfBytes": "32"
+            },
+            "t_bool": {
+              "label": "bool",
+              "numberOfBytes": "1"
+            },
+            "t_bytes32": {
+              "label": "bytes32",
+              "numberOfBytes": "32"
+            },
+            "t_enum(stateOptions)172": {
+              "label": "enum AudioChat.stateOptions",
+              "members": [
+                "PLANNED",
+                "LIVE",
+                "CANCELED",
+                "READY",
+                "FINISHED"
+              ],
+              "numberOfBytes": "1"
+            },
+            "t_mapping(t_address,t_array(t_bytes32)dyn_storage)": {
+              "label": "mapping(address => bytes32[])",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_bytes32,t_struct(CreateAudioChat)196_storage)": {
+              "label": "mapping(bytes32 => struct AudioChat.CreateAudioChat)",
+              "numberOfBytes": "32"
+            },
+            "t_string_storage": {
+              "label": "string",
+              "numberOfBytes": "32"
+            },
+            "t_struct(CreateAudioChat)196_storage": {
+              "label": "struct AudioChat.CreateAudioChat",
+              "members": [
+                {
+                  "label": "audio_event_id",
+                  "type": "t_bytes32",
+                  "offset": 0,
+                  "slot": "0"
+                },
+                {
+                  "label": "created_at",
+                  "type": "t_uint256",
+                  "offset": 0,
+                  "slot": "1"
+                },
+                {
+                  "label": "cid_metadata",
+                  "type": "t_string_storage",
+                  "offset": 0,
+                  "slot": "2"
+                },
+                {
+                  "label": "state",
+                  "type": "t_enum(stateOptions)172",
+                  "offset": 0,
+                  "slot": "3"
+                },
+                {
+                  "label": "is_indexed",
+                  "type": "t_bool",
+                  "offset": 1,
+                  "slot": "3"
+                },
+                {
+                  "label": "creator",
+                  "type": "t_address",
+                  "offset": 2,
+                  "slot": "3"
+                },
+                {
+                  "label": "start_at",
+                  "type": "t_uint256",
+                  "offset": 0,
+                  "slot": "4"
+                },
+                {
+                  "label": "exists",
+                  "type": "t_bool",
+                  "offset": 0,
+                  "slot": "5"
+                },
+                {
+                  "label": "id_index",
+                  "type": "t_uint256",
+                  "offset": 0,
+                  "slot": "6"
+                },
+                {
+                  "label": "state_index",
+                  "type": "t_uint256",
+                  "offset": 0,
+                  "slot": "7"
+                },
+                {
+                  "label": "address_index",
+                  "type": "t_uint256",
+                  "offset": 0,
+                  "slot": "8"
+                }
+              ],
+              "numberOfBytes": "288"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true
+        },
+        "solcVersion": "0.8.9"
+      }
+    }
+  ]
+}

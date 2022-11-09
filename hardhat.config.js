@@ -1,6 +1,7 @@
 require("@nomiclabs/hardhat-waffle"); //new update from hardhat requires to import 'hardhat-toolbox'
+require("@nomiclabs/hardhat-etherscan");
 require("dotenv").config();
-
+require('@openzeppelin/hardhat-upgrades');
 module.exports = {
   solidity: "0.8.9",
   networks: {
@@ -12,6 +13,7 @@ module.exports = {
       accounts: [`0x${process.env.STAGING_PRIVATE_KEY}`],
       gas: 2100000,
       gasPrice: 8000000000,
+      allowUnlimitedContractSize: true
     },
   },
 };
