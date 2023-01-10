@@ -74,9 +74,8 @@ function createNewAudioChat(
     uint256 start_at,
     uint256 created_at,
     string memory cid_metadata,
-    address creator,
     bool is_indexed,
-    string memory recording_arweave_transaction_id,
+    string memory published_recording_access_control_arweave_transaction_id,
     string memory lens_publication_id
 ) external {
     
@@ -92,11 +91,11 @@ function createNewAudioChat(
     require(start_at >= created_at, "created_at cannot be greater than start_at");
     stateOptions current_state;
     uint256 new_list_address_index;
-    if (address_to_audio_chat[creator].length == 0){
+    if (address_to_audio_chat[msg.sender].length == 0){
         new_list_address_index = 0;
     }
     else {
-        new_list_address_index = address_to_audio_chat[creator].length - 1;
+        new_list_address_index = address_to_audio_chat[msg.sender].length - 1;
     }
 
     if (start_at > created_at){
@@ -111,7 +110,7 @@ function createNewAudioChat(
     else {
         state_ready.push(audio_event_id);
     }
-    address_to_audio_chat[creator].push(audio_event_id);
+    address_to_audio_chat[msg.sender].push(audio_event_id);
     _owned_ids.push(audio_event_id);
     id_to_audio_chat[audio_event_id] = CreateAudioChat(
         audio_event_id,
@@ -119,10 +118,10 @@ function createNewAudioChat(
         cid_metadata,
         current_state,
         is_indexed,
-        creator,
+        msg.sender,
         start_at,
         true,
-        recording_arweave_transaction_id,
+        published_recording_access_control_arweave_transaction_id,
         lens_publication_id
     );    
     emit handleNewAudioChat(
@@ -132,7 +131,7 @@ function createNewAudioChat(
         cid_metadata,
         current_state,
         is_indexed,
-        creator
+        msg.sender
     );
 }
 
@@ -240,18 +239,36 @@ function getAllRecordingsByWalletAddress(address creator) public view returns (C
     return owned_audio_chats;
 }
 
-function getAudioChatsByAddress(address creator) public view  returns(CreateAudioChat[] memory){
+function getAudioChatsByAddress(address creator) public view  returns(CreateAudioChat[] memory audio_chats){
         uint256 length_of_array = address_to_audio_chat[creator].length;
-        CreateAudioChat[] memory our_audio_chats = new CreateAudioChat[](length_of_array);
-        for (uint256 i; length_of_array > i; i++ ){
-            our_audio_chats[i] = id_to_audio_chat[address_to_audio_chat[creator][i]];
+        if (creator == msg.sender){
+            CreateAudioChat[] memory our_audio_chats = new CreateAudioChat[](length_of_array);
+            for (uint256 i; length_of_array > i; i++ ){
+                our_audio_chats[i] = id_to_audio_chat[address_to_audio_chat[creator][i]];
+            }
+            return our_audio_chats;
+        }
+        else {
+            uint256 length_of_not_owned;
+            for (uint256 i; length_of_array > i; i++ ){
+                if (id_to_audio_chat[address_to_audio_chat[creator][i]].is_indexed == true){
+                    length_of_not_owned++;
+                }
+            }
+            CreateAudioChat[] memory our_audio_chats = new CreateAudioChat[](length_of_not_owned);
+            for (uint256 i; length_of_array > i; i++ ){
+
+                if (id_to_audio_chat[address_to_audio_chat[creator][i]].is_indexed == true){
+                    our_audio_chats[i] = id_to_audio_chat[address_to_audio_chat[creator][i]];
+                }
+            }
+            return our_audio_chats;
         }
         
         
-        return our_audio_chats;
 }
 
-function getStateArray(stateOptions state) private view returns(bytes32[] memory){
+function getStateArray(stateOptions state) private view returns(bytes32[] memory state_array){
     if (stateOptions.PLANNED == state){
         return state_planned;
     }
@@ -359,4 +376,3 @@ function updateAudioChat(bytes32 audio_event_id,
 
 }
 }
-
